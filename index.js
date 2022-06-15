@@ -6,24 +6,34 @@ const swaggerUI = require("swagger-ui-express");
 
 const PORT = process.env.PORT || 4000;
 
-const { createEmployee, createTeam, createEmployeeAssignment } = require("./create");
-const { getAllEmployees, getAllTeams, getEmployee, getTeam } = require("./read");
-const { updateEmployee, updateTeam } = require("./update");
-const { deleteEmployee, deleteTeam, deleteEmployeeAssignment } = require("./delete");
+const {
+  Register,
+  Login,
+  giveAdminRole,
+  newCourse,
+  newLesson,
+  newLibrary,
+  newLibraryBranch,
+} = require("./controllers/create");
+const {
+  getAllUsers,
+  getOneUser,
+  getAllCourses,
+  getAllLibrary,
+  getAllLibraryBranch,
+  getAllBooks,
+} = require("./controllers/read");
+const { updateUser } = require("./controllers/update");
+const { deleteUser } = require("./controllers/delete");
 
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Employee Management API",
+      title: "Swagger CRUD API",
       version: "1.0.0",
-      description: "Employe Api for employee management",
-      contact: {
-        name: "Jayaramachandran Augustin",
-        url: "https://whizpath.com",
-        email: "jayaramachandran@whizpath.com",
-      },
-      servers: ["http://localhost:3000"],
+      description: "CRUD API FOR MANAGING LIBRARY SYSTEM",
+      servers: ["http://localhost:4000"],
     },
   },
   apis: ["index.js"],
@@ -31,346 +41,486 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
-const {} = require("./update");
+const {} = require("./controllers/update");
 var corsOptions = {
   origin: "http://example.com",
   optionSuccessStatus: 200,
 };
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Users:
+ *       type: object
+ *       required:
+ *         - name
+ *         - password
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ *         password:
+ *           type: string
+ *         isStudent:
+ *           type: boolean default true
+ *         isAdmin:
+ *           type: boolean default false
+ *         isSuperAdmin:
+ *           type: boolean default false
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Courses:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Lessons:
+ *       type: object
+ *       required:
+ *         - name
+ *         - photo
+ *         - description
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ *         photo:
+ *           type: string
+ *         description:
+ *           type: string
+ *         course_id:
+ *           type: number
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Library:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Library_Branch:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ *         library_id:
+ *           type: number
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Books:
+ *       type: object
+ *       required:
+ *         - name
+ *         - photo
+ *         - description
+ *       properties:
+ *         id:
+ *           type: serial
+ *         name:
+ *           type: string
+ *         photo:
+ *           type: string
+ *         description:
+ *           type: string
+ *         library_branch_id:
+ *           type: number
+ */
+
 app.use(express.json());
 /**
  * @swagger
  * definitions:
- *  Employee:
+ *  User:
  *   type: object
  *   properties:
  *    name:
  *     type: string
- *     description: name of the employee
- *     example: 'Jayaramachandran'
- *    date_of_joining:
+ *     description: name of the user
+ *     example: 'Aziz'
+ *    password:
  *     type: string
- *     description: date of joining of the employee
- *     example: '2020-08-30'
- *    email:
- *     type: string
- *     description: email of the employee
- *     example: 'jayaramachandran@whizpath.com'
- *    gender:
- *     type: string
- *     description: gender of the employee
- *     example: 'male'
- *    bio:
- *     type: string
- *     description: biography of the employee
- *     example: 'father, software developer'
- *    designation:
- *     type: string
- *     description: designation of the employee
- *     example: 'Software Engineer'
- *  Team:
+ *     description: password of the user
+ *     example: '123'
+ *  Course:
  *   type: object
  *   properties:
  *    name:
  *     type: string
- *     description: name of the team
- *     example: 'javscript'
- *    email:
- *     type: string
- *     description: email of the team
- *     example: 'javascript@whizpath.com'
+ *     description: name of the course
+ *     example: 'Javscript'
  *    description:
  *     type: string
- *     description: description of the team
- *     example: 'javascript developers'
- *  Employee_Assignment:
+ *     description: description of the course
+ *     example: 'lorem ipsum dolor smit..'
+ *  Lesson:
  *   type: object
  *   properties:
- *    employee_id:
- *     type: integer
- *     description: id of the employee
- *     example: 2
- *    team_id:
- *     type: integer
- *     description: id of the team
+ *    name:
+ *     type: string
+ *     description: name of the lesson
+ *     example: 'Javscript'
+ *    photo:
+ *     type: string
+ *     description: link of the lesson
+ *     example: 'https://image.shutterstock.com/image-photo/lesson-1-white-chalk-text-260nw-535576588.jpg'
+ *    description:
+ *     type: string
+ *     description: description of the lesson
+ *     example: 'lorem ipsum dolor smit..'
+ *    course_id:
+ *     type: serial
+ *     description: course_id of the lesson
+ *     example: 4
+ *  Library:
+ *   type: object
+ *   properties:
+ *    name:
+ *     type: string
+ *     description: name of the library
+ *     example: 'Amir Temur kutubxonasi'
+ *  Librarybranch:
+ *   type: object
+ *   properties:
+ *    name:
+ *     type: string
+ *     description: name of the library
+ *     example: 'Historical books'
+ *    library_id:
+ *     type: number
+ *     description: id of the library
  *     example: 2
  */
 
 /**
  * @swagger
- * /employee:
+ * /api/register:
  *  post:
- *   summary: create employee
- *   description: create employee for the organisation
+ *   summary: Register user
+ *   description: create a new user to register
  *   requestBody:
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/definitions/Employee'
+ *       $ref: '#/definitions/User'
  *   responses:
  *    200:
- *     description: employee created succesfully
+ *     description: Created successfully
  *    500:
- *     description: failure in creating employee
+ *     description: Failure in register user
  */
-app.post("/employee", createEmployee);
+
+app.post("/api/register", Register);
+
 /**
  * @swagger
- * /team:
+ * /api/login:
  *  post:
- *   summary: create team
- *   description: create team
+ *   summary: Login user
+ *   description: Login user
  *   parameters:
  *    - in: body
  *      name: body
  *      required: true
  *      description: body of the team
  *      schema:
- *       $ref: '#/definitions/Team'
+ *       $ref: '#/definitions/User'
  *   requestBody:
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/definitions/Team'
+ *       $ref: '#/definitions/User'
  *   responses:
  *    200:
  *     description: success
  *    500:
  *     description : error
  */
-app.post("/team", createTeam);
+
+app.post("/api/login", Login);
+
 /**
  * @swagger
- * /employeeassignment:
+ * /api/user/list:
+ *  get:
+ *   summary: get all users
+ *   description: get all users
+ *   responses:
+ *    200:
+ *     description: success
+ *    500:
+ *     description: error
+ */
+app.get("/api/user/list", cors(), getAllUsers);
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *  get:
+ *   summary: get one user
+ *   description: get one user
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the user
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/user/:id`, cors(), getOneUser);
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *  put:
+ *   summary: update user
+ *   description: update user
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the user
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/User'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/User'
+ */
+app.put("/api/user/:id", cors(corsOptions), updateUser);
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *  delete:
+ *   summary: delete user
+ *   description: delete user
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the user
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/user/:id", deleteUser);
+
+/**
+ * @swagger
+ * /api/course:
  *  post:
- *   summary: create employee assignment
- *   description: create employee assignment
- *   parameters:
- *    - in: body
- *      name: body
- *      required: true
- *      description: employee assignment of the team
- *      schema:
- *       $ref: '#/definitions/Employee_Assignment'
+ *   summary: create new course
+ *   description: create new course
  *   requestBody:
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/definitions/Employee_Assignment'
+ *       $ref: '#/definitions/Course'
+ *   responses:
+ *    200:
+ *     description: Created successfully
+ *    500:
+ *     description: Failure in create new course
+ */
+
+app.post("/api/course", newCourse);
+
+/**
+ * @swagger
+ * /api/courses/list:
+ *  get:
+ *   summary: get all course
+ *   description: get all courses info
  *   responses:
  *    200:
  *     description: success
  *    500:
  *     description: error
  */
-app.post("/employeeassignment", createEmployeeAssignment);
+app.get("/api/courses/list", cors(), getAllCourses);
 
 /**
  * @swagger
- * /employees:
+ * /api/lesson:
+ *  post:
+ *   summary: create new lesson
+ *   description: create new lesson
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Lesson'
+ *   responses:
+ *    200:
+ *     description: Created successfully
+ *    500:
+ *     description: Failure in create new course
+ */
+
+app.post("/api/lesson", newLesson);
+
+/**
+ * @swagger
+ * /api/library:
+ *  post:
+ *   summary: new library
+ *   description: new library
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Library'
+ *   responses:
+ *    200:
+ *     description: Created successfully
+ *    500:
+ *     description: Failure in register user
+ */
+
+app.post("/api/library", newLibrary);
+
+/**
+ * @swagger
+ * /api/library/list:
  *  get:
- *   summary: get all employees
- *   description: get all employees
+ *   summary: get all library
+ *   description: get all library info
  *   responses:
  *    200:
  *     description: success
  *    500:
  *     description: error
  */
-app.get("/employees", cors(), getAllEmployees);
-/**
- * @swagger
- * /teams:
- *  get:
- *   summary: get all teams
- *   description: get all teams
- *   responses:
- *    200:
- *     description: success
- */
-app.get("/teams", cors(), getAllTeams);
-/**
- * @swagger
- * /employee/{employee_id}:
- *  get:
- *   summary: get employee
- *   description: get employee
- *   parameters:
- *    - in: path
- *      name: employee_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the employee
- *      example: 2
- *   responses:
- *    200:
- *     description: success
- */
-app.get("/employee/:id", cors(), getEmployee);
-/**
- * @swagger
- * /team/{team_id}:
- *  get:
- *   summary: create team
- *   description: create team
- *   parameters:
- *    - in: path
- *      name: team_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the team
- *      example: 2
- *   responses:
- *    200:
- *     description: success
- */
-app.get("/team/:id", cors(), getTeam);
+app.get("/api/library/list", cors(), getAllLibrary);
 
 /**
  * @swagger
- * /employee/{id}:
- *  put:
- *   summary: update employee
- *   description: update employee
- *   consumes:
- *    - application/json
- *   produces:
- *    - application/json
- *   parameters:
- *    - in: path
- *      name: id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the employee
- *      example: 2
- *    - in: body
- *      name: body
- *      required: true
- *      description: body object
- *      schema:
- *       $ref: '#/definitions/Employee'
+ * /api/branches:
+ *  post:
+ *   summary: create new library branch
+ *   description: create new library branch
  *   requestBody:
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/definitions/Employee'
+ *       $ref: '#/definitions/Librarybranch'
  *   responses:
  *    200:
- *     description: success
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/definitions/Team'
+ *     description: Created successfully
+ *    500:
+ *     description: Failure
  */
-app.put("/employee/:id", cors(corsOptions), updateEmployee);
+
+app.post("/api/branches", newLibraryBranch);
 
 /**
  * @swagger
- * /team/{id}:
- *  put:
- *   summary: update team
- *   description: update team
- *   consumes:
- *    - application/json
- *   produces:
- *    - application/json
- *   parameters:
- *    - in: path
- *      name: id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the team
- *      example: 2
- *    - in: body
- *      name: body
- *      required: true
- *      description: body object
- *      schema:
- *       $ref: '#/definitions/Team'
- *   requestBody:
- *    content:
- *     application/json:
- *      schema:
- *       $ref: '#/definitions/Team'
+ * /api/branches/list:
+ *  get:
+ *   summary: get all librarybranch
+ *   description: get all librarybranch info
  *   responses:
  *    200:
  *     description: success
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/definitions/Team'
+ *    500:
+ *     description: error
  */
-app.put("/team/:id", cors(corsOptions), updateTeam);
+app.get("/api/branches/list", cors(), getAllLibraryBranch);
 
 /**
  * @swagger
- * /employee/{employee_id}:
- *  delete:
- *   summary: delete employee
- *   description: delete employee
- *   parameters:
- *    - in: path
- *      name: employee_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the employee
- *      example: 2
+ * /api/books/list:
+ *  get:
+ *   summary: get all books
+ *   description: get all books info
  *   responses:
  *    200:
  *     description: success
+ *    500:
+ *     description: error
  */
-app.delete("/employee/:id", deleteEmployee);
+app.get("/api/books/list", cors(), getAllBooks);
 
-/**
- * @swagger
- * /team/{team_id}:
- *  delete:
- *   summary: delete team
- *   description: delete team
- *   parameters:
- *    - in: path
- *      name: team_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the team
- *      example: 2
- *   responses:
- *    200:
- *     description: success
- */
-app.delete("/team/:id", deleteTeam);
-/**
- * @swagger
- * /employeeassign/{employee_id}/{team_id}:
- *  delete:
- *   summary: delete employee assignment
- *   description: delete employee assignment
- *   parameters:
- *    - in: path
- *      name: employee_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the employee
- *      example: 12
- *    - in: path
- *      name: team_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the team
- *      example: 12
- *   responses:
- *    200:
- *     description: success
- */
-app.delete("/employeeassign/:employee_id/:team_id", deleteEmployeeAssignment);
+// /**
+//  * @swagger
+//  * /team/{team_id}:
+//  *  get:
+//  *   summary: give admin role
+//  *   description: create team
+//  *   parameters:
+//  *    - in: path
+//  *      name: team_id
+//  *      schema:
+//  *       type: integer
+//  *      required: true
+//  *      description: id of the team
+//  *      example: 2
+//  *   responses:
+//  *    200:
+//  *     description: success
+//  */
+// app.get("/api/user/:id", cors(), giveAdminRole);
 
 app.listen(PORT, () => {
   console.log(`The server listening in port: ${PORT}`);
