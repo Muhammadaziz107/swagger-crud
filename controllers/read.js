@@ -58,25 +58,78 @@ exports.getAllBooks = async (req, res) => {
   }
 };
 
-// exports.getTeam = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     let data = {};
-//     const teamData = await pool.query("SELECT * FROM TEAM WHERE id =$1", [id]);
-//     const employees = await pool.query(
-//       "SELECT * FROM EMPLOYEE WHERE ID IN (SELECT team_id  from  EMPLOYEE_ASSIGNMENT where TEAM_ID=$1)",
-//       [id]
-//     );
-//     data = teamData.rows[0];
-//     if (data) {
-//       data.employees = employees.rows;
-//     } else {
-//       data = {
-//         info: "No team data found for this id",
-//       };
-//     }
-//     res.json(data);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// };
+exports.getAllLessons = async (req, res) => {
+  try {
+    const getAllLessons = await pool.query(`select * from lessons`);
+    res.json(getAllLessons.rows);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getOneCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let data = {};
+    const getOneUser = await pool.query("select * from courses where id = $1;", [id]);
+    data = getOneUser.rows[0];
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getOneLesson = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let data = {};
+    const getOneUser = await pool.query("select * from lessons where id = $1;", [id]);
+    data = getOneUser.rows[0];
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getOneLibrary = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let data = {};
+    const getOneUser = await pool.query("select * from library where id = $1;", [id]);
+    data = getOneUser.rows[0];
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getOneLibraryBranch = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let data = {};
+    const getOneUser = await pool.query("select * from library_branch where id = $1;", [
+      id,
+    ]);
+    data = getOneUser.rows[0];
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getOneBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let data = {};
+    const getOneUser = await pool.query("select * from books where id = $1;", [id]);
+    data = getOneUser.rows[0];
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

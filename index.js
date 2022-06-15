@@ -14,6 +14,7 @@ const {
   newLesson,
   newLibrary,
   newLibraryBranch,
+  newBook,
 } = require("./controllers/create");
 const {
   getAllUsers,
@@ -22,6 +23,12 @@ const {
   getAllLibrary,
   getAllLibraryBranch,
   getAllBooks,
+  getAllLessons,
+  getOneCourse,
+  getOneLesson,
+  getOneLibrary,
+  getOneLibraryBranch,
+  getOneBook,
 } = require("./controllers/read");
 const { updateUser } = require("./controllers/update");
 const { deleteUser } = require("./controllers/delete");
@@ -230,6 +237,25 @@ app.use(express.json());
  *     type: number
  *     description: id of the library
  *     example: 2
+ *  Book:
+ *   type: object
+ *   properties:
+ *    name:
+ *     type: string
+ *     description: name of the lesson
+ *     example: 'Learn Javscript'
+ *    photo:
+ *     type: string
+ *     description: link of the lesson
+ *     example: 'https://www.ukrgate.com/eng/wp-content/uploads/2021/02/The-Ukrainian-Book-Institute-Purchases-380.9-Thousand-Books-for-Public-Libraries1.jpeg'
+ *    description:
+ *     type: string
+ *     description: description of the lesson
+ *     example: 'for developers'
+ *    library_branch_id:
+ *     type: serial
+ *     description: course_id of the lesson
+ *     example: 1
  */
 
 /**
@@ -402,6 +428,26 @@ app.get("/api/courses/list", cors(), getAllCourses);
 
 /**
  * @swagger
+ * /api/courses/{id}:
+ *  get:
+ *   summary: get one course
+ *   description: get one course
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the course
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/courses/:id`, cors(), getOneCourse);
+
+/**
+ * @swagger
  * /api/lesson:
  *  post:
  *   summary: create new lesson
@@ -418,7 +464,41 @@ app.get("/api/courses/list", cors(), getAllCourses);
  *     description: Failure in create new course
  */
 
-app.post("/api/lesson", newLesson);
+app.post("/api/lessons", newLesson);
+
+/**
+ * @swagger
+ * /api/lesson/list:
+ *  get:
+ *   summary: get all lessons
+ *   description: get all lessons info
+ *   responses:
+ *    200:
+ *     description: success
+ *    500:
+ *     description: error
+ */
+app.get("/api/lesson/list", cors(), getAllLessons);
+
+/**
+ * @swagger
+ * /api/lesson/{id}:
+ *  get:
+ *   summary: get one lesson
+ *   description: get one lesson
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the lesson
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/lesson/:id`, cors(), getOneLesson);
 
 /**
  * @swagger
@@ -456,6 +536,26 @@ app.get("/api/library/list", cors(), getAllLibrary);
 
 /**
  * @swagger
+ * /api/library/{id}:
+ *  get:
+ *   summary: get one library
+ *   description: get one library
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the library
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/library/:id`, cors(), getOneLibrary);
+
+/**
+ * @swagger
  * /api/branches:
  *  post:
  *   summary: create new library branch
@@ -490,6 +590,46 @@ app.get("/api/branches/list", cors(), getAllLibraryBranch);
 
 /**
  * @swagger
+ * /api/branches/{id}:
+ *  get:
+ *   summary: get one library branches
+ *   description: get one library branches
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the library branches
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/branches/:id`, cors(), getOneLibraryBranch);
+
+/**
+ * @swagger
+ * /api/book:
+ *  post:
+ *   summary: create new book
+ *   description: create new book
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Book'
+ *   responses:
+ *    200:
+ *     description: Created successfully
+ *    500:
+ *     description: Failure
+ */
+
+app.post("/api/book", newBook);
+
+/**
+ * @swagger
  * /api/books/list:
  *  get:
  *   summary: get all books
@@ -501,6 +641,26 @@ app.get("/api/branches/list", cors(), getAllLibraryBranch);
  *     description: error
  */
 app.get("/api/books/list", cors(), getAllBooks);
+
+/**
+ * @swagger
+ * /api/books/{id}:
+ *  get:
+ *   summary: get one book
+ *   description: get one book
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the book
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get(`/api/books/:id`, cors(), getOneBook);
 
 // /**
 //  * @swagger

@@ -90,3 +90,16 @@ exports.newLibraryBranch = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.newBook = async (req, res) => {
+  try {
+    const { name, photo, description, library_branch_id } = req.body;
+    const newCourse = await pool.query(
+      "insert into library_branch(name, library_id) VALUES($1, $2) returning *",
+      [name, photo, description, library_branch_id]
+    );
+    res.json(newCourse.rows[0]);
+  } catch (error) {
+    console.log(error);
+  }
+};
