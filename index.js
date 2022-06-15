@@ -29,8 +29,8 @@ const {
   getOneLibraryBranch,
   getOneBook,
 } = require("./controllers/read");
+
 const {
-  updateUser,
   updateCourses,
   updateLessons,
   updateLibrary,
@@ -38,6 +38,7 @@ const {
   updateBook,
   giveAdminRole,
 } = require("./controllers/update");
+
 const {
   deleteUser,
   deleteCourse,
@@ -357,8 +358,8 @@ app.get(`/api/user/:id`, cors(), getOneUser);
  * @swagger
  * /api/user/{id}:
  *  put:
- *   summary: update user
- *   description: update user
+ *   summary: give admin role
+ *   description: give admin role
  *   consumes:
  *    - application/json
  *   produces:
@@ -379,12 +380,8 @@ app.get(`/api/user/:id`, cors(), getOneUser);
  *   responses:
  *    200:
  *     description: success
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/definitions/User'
  */
-app.put("/api/user/:id", cors(corsOptions), updateUser);
+app.get("/api/user/:id", cors(), giveAdminRole);
 
 /**
  * @swagger
@@ -940,26 +937,6 @@ app.put("/api/books/:id", cors(corsOptions), updateBook);
  *     description: success
  */
 app.delete("/api/books/:id", deleteBook);
-
-/**
- * @swagger
- * /team/{team_id}:
- *  update:
- *   summary: give admin role
- *   description: give admin role
- *   parameters:
- *    - in: path
- *      name: team_id
- *      schema:
- *       type: integer
- *      required: true
- *      description: id of the team
- *      example: 2
- *   responses:
- *    200:
- *     description: success
- */
-app.get("/api/user/:id", cors(), giveAdminRole);
 
 app.listen(PORT, () => {
   console.log(`The server listening in port: ${PORT}`);

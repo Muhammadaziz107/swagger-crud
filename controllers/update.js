@@ -1,18 +1,18 @@
 const pool = require("../db");
 
-exports.updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, password } = req.body;
-    const updateUser = await pool.query(
-      "update users set name = $1, password = $2 where id= $3 returning *",
-      [name, password, id]
-    );
-    res.json(updateUser.rows[0]);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
+// exports.updateUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { name, password } = req.body;
+//     const updateUser = await pool.query(
+//       "update users set name = $1, password = $2 where id= $3 returning *",
+//       [name, password, id]
+//     );
+//     res.json(updateUser.rows[0]);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
 
 exports.updateCourses = async (req, res) => {
   try {
