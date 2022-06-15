@@ -26,18 +26,7 @@ exports.Login = async (req, res) => {
   }
 };
 
-exports.giveAdminRole = async (req, res) => {
-  try {
-    const { id } = req.body;
-    const giveAdminRole = await pool.query(
-      "update users set isAdmin = true where id = $1",
-      [id]
-    );
-    res.json(giveAdminRole.rows[0]);
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 exports.newCourse = async (req, res) => {
   try {

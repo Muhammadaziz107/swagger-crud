@@ -22,7 +22,7 @@ create table lessons(
 	name varchar(100) not null,
 	photo text not null,
 	description text not null,
-	course_id int references courses(id)
+	course_id int references courses(id) on delete cascade
 );
 
 create table library(
@@ -33,7 +33,7 @@ create table library(
 create table library_branch(
 	id serial primary key,
 	name varchar(120) not null,
-	library_id int references library(id)
+	library_id int references library(id) on delete cascade
 );
 
 create table books(
@@ -41,5 +41,5 @@ create table books(
 	name varchar(150) not null,
 	photo text not null,
 	description text not null,
-	library_branch_id int references library_branch(id)
+	library_branch_id int references library_branch(id) on delete cascade
 );

@@ -12,37 +12,65 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.deleteTeam = async (req, res) => {
+exports.deleteCourse = async (req, res) => {
   try {
     const { id } = req.params;
-    let data = {};
-    const employeeAssignmentData = await pool.query(
-      "DELETE from EMPLOYEE_ASSIGNMENT where team_id=$1 returning *",
+    const deleteCourse = await pool.query(
+      "delete from courses where id= $1 returning *",
       [id]
     );
-    const teamData = await pool.query("Delete from team where id =$1 returning *", [id]);
-    data = teamData.rows[0];
-    if (data) {
-      data.employees = employeeAssignmentData.rows;
-    } else {
-      data = {
-        info: "No team to delete",
-      };
-    }
-    res.json(data);
+    res.json(deleteCourse.rows[0]);
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-exports.deleteEmployeeAssignment = async (req, res) => {
+exports.deleteLesson = async (req, res) => {
   try {
-    const { employee_id, team_id } = req.params;
-    const employeeAssignmentData = await pool.query(
-      "DELETE from EMPLOYEE_ASSIGNMENT where team_id=$1 and employee_id=$2 returning *",
-      [team_id, employee_id]
+    const { id } = req.params;
+    const deleteLesson = await pool.query(
+      "delete from lessons where id= $1 returning *",
+      [id]
     );
-    res.json(employeeAssignmentData.rows[0]);
+    res.json(deleteLesson.rows[0]);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.deleteLibrary = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteLibrary = await pool.query(
+      "delete from library where id= $1 returning *",
+      [id]
+    );
+    res.json(deleteLibrary.rows[0]);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.deleteLibraryBranch = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteLibraryBranch = await pool.query(
+      "delete from library_branch where id= $1 returning *",
+      [id]
+    );
+    res.json(deleteLibraryBranch.rows[0]);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteBook = await pool.query("delete from books where id= $1 returning *", [
+      id,
+    ]);
+    res.json(deleteBook.rows[0]);
   } catch (error) {
     res.status(500).json(error);
   }

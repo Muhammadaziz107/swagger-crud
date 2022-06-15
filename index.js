@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 4000;
 const {
   Register,
   Login,
-  giveAdminRole,
   newCourse,
   newLesson,
   newLibrary,
@@ -30,8 +29,23 @@ const {
   getOneLibraryBranch,
   getOneBook,
 } = require("./controllers/read");
-const { updateUser } = require("./controllers/update");
-const { deleteUser } = require("./controllers/delete");
+const {
+  updateUser,
+  updateCourses,
+  updateLessons,
+  updateLibrary,
+  updateLibraryBranch,
+  updateBook,
+  giveAdminRole,
+} = require("./controllers/update");
+const {
+  deleteUser,
+  deleteCourse,
+  deleteLesson,
+  deleteLibrary,
+  deleteLibraryBranch,
+  deleteBook,
+} = require("./controllers/delete");
 
 const swaggerOptions = {
   definition: {
@@ -448,6 +462,59 @@ app.get(`/api/courses/:id`, cors(), getOneCourse);
 
 /**
  * @swagger
+ * /api/courses/{id}:
+ *  put:
+ *   summary: update course
+ *   description: update course
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the course
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Course'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/Course'
+ */
+app.put("/api/courses/:id", cors(corsOptions), updateCourses);
+
+/**
+ * @swagger
+ * /api/courses/{id}:
+ *  delete:
+ *   summary: delete courses
+ *   description: delete courses
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the courses
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/courses/:id", deleteCourse);
+
+/**
+ * @swagger
  * /api/lesson:
  *  post:
  *   summary: create new lesson
@@ -499,6 +566,59 @@ app.get("/api/lesson/list", cors(), getAllLessons);
  *     description: success
  */
 app.get(`/api/lesson/:id`, cors(), getOneLesson);
+
+/**
+ * @swagger
+ * /api/lesson/{id}:
+ *  put:
+ *   summary: update lesson
+ *   description: update lesson
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the lesson
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Lesson'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/Lesson'
+ */
+app.put("/api/lesson/:id", cors(corsOptions), updateLessons);
+
+/**
+ * @swagger
+ * /api/lesson/{id}:
+ *  delete:
+ *   summary: delete lesson
+ *   description: delete lesson
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the lesson
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/lesson/:id", deleteLesson);
 
 /**
  * @swagger
@@ -556,6 +676,59 @@ app.get(`/api/library/:id`, cors(), getOneLibrary);
 
 /**
  * @swagger
+ * /api/library/{id}:
+ *  put:
+ *   summary: update library
+ *   description: update library
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the library
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Library'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/Library'
+ */
+app.put("/api/library/:id", cors(corsOptions), updateLibrary);
+
+/**
+ * @swagger
+ * /api/library/{id}:
+ *  delete:
+ *   summary: delete library
+ *   description: delete library
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the library
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/library/:id", deleteLibrary);
+
+/**
+ * @swagger
  * /api/branches:
  *  post:
  *   summary: create new library branch
@@ -607,6 +780,59 @@ app.get("/api/branches/list", cors(), getAllLibraryBranch);
  *     description: success
  */
 app.get(`/api/branches/:id`, cors(), getOneLibraryBranch);
+
+/**
+ * @swagger
+ * /api/branches/{id}:
+ *  put:
+ *   summary: update library branches
+ *   description: update library branches
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the library branches
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Librarybranch'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/Librarybranch'
+ */
+app.put("/api/branches/:id", cors(corsOptions), updateLibraryBranch);
+
+/**
+ * @swagger
+ * /api/branches/{id}:
+ *  delete:
+ *   summary: delete branches
+ *   description: delete branches
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the branches
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/branches/:id", deleteLibraryBranch);
 
 /**
  * @swagger
@@ -662,26 +888,78 @@ app.get("/api/books/list", cors(), getAllBooks);
  */
 app.get(`/api/books/:id`, cors(), getOneBook);
 
-// /**
-//  * @swagger
-//  * /team/{team_id}:
-//  *  get:
-//  *   summary: give admin role
-//  *   description: create team
-//  *   parameters:
-//  *    - in: path
-//  *      name: team_id
-//  *      schema:
-//  *       type: integer
-//  *      required: true
-//  *      description: id of the team
-//  *      example: 2
-//  *   responses:
-//  *    200:
-//  *     description: success
-//  */
+/**
+ * @swagger
+ * /api/books/{id}:
+ *  put:
+ *   summary: update books
+ *   description: update books
+ *   consumes:
+ *    - application/json
+ *   produces:
+ *    - application/json
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the books
+ *      example: 2
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/definitions/Book'
+ *   responses:
+ *    200:
+ *     description: success
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/definitions/Book'
+ */
+app.put("/api/books/:id", cors(corsOptions), updateBook);
 
-// app.get("/api/user/:id", cors(), giveAdminRole);
+/**
+ * @swagger
+ * /api/books/{id}:
+ *  delete:
+ *   summary: delete books
+ *   description: delete books
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the books
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.delete("/api/books/:id", deleteBook);
+
+/**
+ * @swagger
+ * /team/{team_id}:
+ *  update:
+ *   summary: give admin role
+ *   description: give admin role
+ *   parameters:
+ *    - in: path
+ *      name: team_id
+ *      schema:
+ *       type: integer
+ *      required: true
+ *      description: id of the team
+ *      example: 2
+ *   responses:
+ *    200:
+ *     description: success
+ */
+app.get("/api/user/:id", cors(), giveAdminRole);
 
 app.listen(PORT, () => {
   console.log(`The server listening in port: ${PORT}`);
